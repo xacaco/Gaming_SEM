@@ -14,7 +14,7 @@ The original project investigates how personality traits (especially Conscientio
 
 ## What the notebook does
 
-`Data_Quality_Control.ipynb` is organised in these sections:
+`Imagen_QC.ipynb` is organised in these sections:
 
 1. **Data cleaning and processing**
    - Import of the raw wide-format file (about 1500 participants, 149 variables in the real data).
