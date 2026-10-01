@@ -39,7 +39,6 @@ The original project investigates how personality traits (especially Conscientio
    - Descriptive statistics and correlations.
    - Group comparisons: gamers vs non-gamers and sex differences (with multiple-comparison correction), and gamers vs non-gamers controlling for sex.
    - Exclusion criteria (participants with a pattern compatible with internet gaming disorder).
-   - Differences across study centres.
 
 ## Key decisions and limitations
 
