@@ -1,0 +1,43 @@
+TITLE:
+    LGCM conscientiousness with sex, age quadratic;
+DATA:
+    FILE IS conscientiousnessAll_mplus.dat;
+VARIABLE:
+    NAMES ARE
+      Ligne
+      C_BL C_FU1 C_FU2 C_FU3
+      gamer gender center
+      age_BL age_FU1 age_FU2 age_FU3;
+    USEVARIABLES ARE
+      C_BL C_FU1 C_FU2 C_FU3
+      gamer gender
+      age_BL age_FU1 age_FU2 age_FU3;
+    MISSING=.;
+    GROUPING IS gamer
+      (0 = nongamer
+       1 = gamer);
+ANALYSIS:
+    ESTIMATOR = MLR;
+MODEL:
+    i s q | C_BL@0 C_FU1@1 C_FU2@2 C_FU3@3;
+    i ON gender;
+    s ON gender;
+    q ON gender;
+    C_BL ON age_BL;
+    C_FU1 ON age_FU1;
+    C_FU2 ON age_FU2;
+    C_FU3 ON age_FU3;
+MODEL nongamer:
+    [i] (i0);
+    [s] (s0);
+    [q] (q0);
+MODEL gamer:
+    [i] (i1);
+    [s] (s1);
+    [q] (q1);
+MODEL TEST:
+    0 = i0 - i1;
+    0 = s0 - s1;
+    0 = q0 - q1;
+OUTPUT:
+    SAMPSTAT STANDARDIZED TECH1 TECH4 CINTERVAL;

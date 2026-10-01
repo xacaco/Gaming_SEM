@@ -1,0 +1,88 @@
+TITLE: RI-CLPM (4 waves: BL, FU1, FU2, FU3);
+
+DATA:
+  FILE = ri_df.csv;
+
+VARIABLE:
+  NAMES = Ligne 
+          N1 N2 N3 N4 
+          E1 E2 E3 E4 
+          O1 O2 O3 O4 
+          A1 A2 A3 A4 
+          C1 C2 C3 C4 
+          H1 H2 H3 H4 
+          AS1 AS2 AS3 AS4 
+          IMP1 IMP2 IMP3 IMP4 
+          SS1 SS2 SS3 SS4 
+          VG1 VG2 VG3 VG4
+          VGi1 VGi2 VGi3 VGi4
+          VGf1 VGf2 VGf3 VGf4;
+
+  MISSING = .;
+
+  USEVARIABLES = N1 N2 N3 N4
+                 VG1 VG2 VG3 VG4;
+
+ANALYSIS:
+  ESTIMATOR = MLR;
+
+MODEL:
+
+! -----------------------
+! Random intercepts
+! -----------------------
+RI_N BY N1@1 N2@1 N3@1 N4@1;
+RI_VG BY VG1@1 VG2@1 VG3@1 VG4@1;
+
+! -----------------------
+! Within-person factors
+! -----------------------
+wN1 BY N1@1;
+wN2 BY N2@1;
+wN3 BY N3@1;
+wN4 BY N4@1;
+
+wVG1 BY VG1@1;
+wVG2 BY VG2@1;
+wVG3 BY VG3@1;
+wVG4 BY VG4@1;
+
+! Fix residual variances to 0
+N1@0 N2@0 N3@0 N4@0;
+VG1@0 VG2@0 VG3@0 VG4@0;
+
+! -----------------------
+! Autoregressive paths
+! -----------------------
+wN2 ON wN1 (a1);
+wN3 ON wN2 (a2);
+wN4 ON wN3 (a3);
+
+wVG2 ON wVG1 (b1);
+wVG3 ON wVG2 (b2);
+wVG4 ON wVG3 (b3);
+
+! -----------------------
+! Cross-lagged paths
+! -----------------------
+wN2 ON wVG1 (c1);
+wN3 ON wVG2 (c2);
+wN4 ON wVG3 (c3);
+
+wVG2 ON wN1 (d1);
+wVG3 ON wN2 (d2);
+wVG4 ON wN3 (d3);
+
+! -----------------------
+! Covariances
+! -----------------------
+RI_N WITH RI_VG;
+
+wN1 WITH wVG1;
+
+wN2 WITH wVG2;
+wN3 WITH wVG3;
+wN4 WITH wVG4;
+
+OUTPUT:
+  STANDARDIZED TECH1 TECH4;
