@@ -49,7 +49,7 @@ The original project investigates how personality traits (especially Conscientio
 
 ## Data availability
 
-The original analysis used data from the IMAGEN project, which are only available to approved researchers under the cohort's data-sharing policy. Outputs and results discussions have been hidden in this file version.
+The original analysis used data from the IMAGEN project, which are only available to approved researchers under the cohort's data-sharing policy. Outputs and results discussions have been hidden in this file version. All variable names and values have been changed from those in the original dataset.
 
 ## Author
 
