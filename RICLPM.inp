@@ -1,0 +1,77 @@
+TITLE: RI-CLPM, 4 waves (x = trait, y = log exposure);
+
+DATA:
+  FILE = riclpm_data.csv;
+
+VARIABLE:
+  NAMES = pid
+          x1 y1 x2 y2 x3 y3 x4 y4;
+
+  MISSING = .;
+
+  USEVARIABLES = x1 x2 x3 x4
+                 y1 y2 y3 y4;
+
+ANALYSIS:
+  ESTIMATOR = MLR;
+
+MODEL:
+
+! -----------------------
+! Random intercepts (between-person)
+! -----------------------
+RI_x BY x1@1 x2@1 x3@1 x4@1;
+RI_y BY y1@1 y2@1 y3@1 y4@1;
+
+! -----------------------
+! Within-person components
+! -----------------------
+wx1 BY x1@1;
+wx2 BY x2@1;
+wx3 BY x3@1;
+wx4 BY x4@1;
+
+wy1 BY y1@1;
+wy2 BY y2@1;
+wy3 BY y3@1;
+wy4 BY y4@1;
+
+! Fix measurement error variances to 0
+x1@0 x2@0 x3@0 x4@0;
+y1@0 y2@0 y3@0 y4@0;
+
+! -----------------------
+! Autoregressive paths
+! -----------------------
+wx2 ON wx1 (a1);
+wx3 ON wx2 (a2);
+wx4 ON wx3 (a3);
+
+wy2 ON wy1 (b1);
+wy3 ON wy2 (b2);
+wy4 ON wy3 (b3);
+
+! -----------------------
+! Cross-lagged paths
+! -----------------------
+wx2 ON wy1 (c1);   ! socialisation: exposure -> later trait
+wx3 ON wy2 (c2);
+wx4 ON wy3 (c3);
+
+wy2 ON wx1 (d1);   ! selection: trait -> later exposure
+wy3 ON wx2 (d2);
+wy4 ON wx3 (d3);
+
+! -----------------------
+! Covariances
+! -----------------------
+RI_x WITH RI_y;
+RI_x RI_y WITH wx1@0 wy1@0;
+
+wx1 WITH wy1;
+wx2 WITH wy2;
+wx3 WITH wy3;
+wx4 WITH wy4;
+
+OUTPUT:
+  STANDARDIZED TECH1 TECH4;
